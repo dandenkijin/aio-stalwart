@@ -114,6 +114,7 @@ function web_port() {
     ENSURE_WEB_PORT_CONFIG="ON"
   fi
 
+  # CADDY listener to traefik
   if [ "$ENSURE_WEB_PORT_CONFIG" = "ON" ]; then
     sed -e '/^server\.listener\.aio-caddy\./d'
     echo 'server.listener.aio-caddy.bind = "[::]:10003"'
@@ -145,6 +146,7 @@ function storage() {
     ENSURE_STORAGE_CONFIG="ON"
   fi
 
+  # ROCKsDB to postgresql
   if [ "$ENSURE_STORAGE_CONFIG" = "ON" ]; then
     sed -e '/^store\.aio-rocksdb\./d' -e '/^storage\.data/d' -e '/^storage\.fts/d' -e '/^storage\.blob/d' -e '/^storage\.lookup/d'
     echo 'store.aio-rocksdb.type = "rocksdb"'
@@ -165,6 +167,7 @@ function directory() {
     ENSURE_DIRECTORY_CONFIG="ON"
   fi
 
+  # rocksdb to postgresql
   if [ "$ENSURE_DIRECTORY_CONFIG" = "ON" ]; then
     sed -e '/^directory\.aio-rocksdb\./d' -e '/^storage\.directory/d'
     echo 'directory.aio-rocksdb.type = "internal"'
@@ -218,6 +221,7 @@ function fallback_admin() {
     ENSURE_FALLBACK_ADMIN_CONFIG="ON"
   fi
 
+  # AUTH features
   if [ "$ENSURE_FALLBACK_ADMIN_CONFIG" = "ON" ]; then
     sed -e '/^authentication\.fallback-admin\./d'
     echo 'authentication.fallback-admin.user = "admin"'
@@ -233,6 +237,7 @@ function auto_config_cert() {
     AUTO_CONFIG_TLS_CERT="ON"
   fi
 
+  # CADDY references, traefik cert management
   if [ "$AUTO_CONFIG_TLS_CERT" = "ON" ]; then
     if [ -z "$NC_DOMAIN" ]; then
       >&2 echo "NC_DOMAIN is not set."
